@@ -1,20 +1,17 @@
 package com.example.universityogranizer.domain;
 
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
-
 import javax.persistence.MappedSuperclass;
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 @MappedSuperclass
 public class Person extends BaseEntity{
-    @Length(min = 3)
-    @Valid
+    @Size(min = 3)
     String personName;
-    @Length(min = 3)
+    @Size(min = 3)
     String surname;
-    @Range(min = 18)
+    @Min(18)
     Integer age;
     @Email
     String email;
