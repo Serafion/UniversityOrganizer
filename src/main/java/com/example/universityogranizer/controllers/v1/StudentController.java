@@ -63,13 +63,13 @@ public class StudentController {
         return studentService.findAllSorted(sort);
     }
 
-    @PutMapping({"/{idT}/{idS}"})
+    @PostMapping({"/{idT}/{idS}"})
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addTeacherToStudent(@PathVariable Long idT, @PathVariable Long idS){
         studentService.addTeacherToStudent(idT,idS);
     }
 
-    @PutMapping({"/{idT}/{idS}"})
+    @GetMapping({"/{idT}/{idS}"})
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void deleteTeacherToStudent(@PathVariable Long idT, @PathVariable Long idS){
         studentService.deleteTeacherFromStudent(idT,idS);
