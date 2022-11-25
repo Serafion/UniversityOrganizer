@@ -1,4 +1,4 @@
-package com.example.universityogranizer.repositories;
+package com.example.universityogranizer.teacherservice.repository;
 
 import com.example.universityogranizer.domain.Teacher;
 import org.springframework.data.domain.Page;

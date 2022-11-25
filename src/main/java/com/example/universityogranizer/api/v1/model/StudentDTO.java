@@ -1,5 +1,6 @@
 package com.example.universityogranizer.api.v1.model;
 
+import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
 import lombok.*;
 
 import javax.validation.constraints.Email;

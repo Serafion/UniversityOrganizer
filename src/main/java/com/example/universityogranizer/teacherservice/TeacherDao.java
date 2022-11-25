@@ -1,36 +1,31 @@
-package com.example.universityogranizer.service;
+package com.example.universityogranizer.teacherservice;
 
 import com.example.universityogranizer.api.v1.mapper.StudentMapperImpl;
-import com.example.universityogranizer.api.v1.mapper.TeacherMapperImpl;
 import com.example.universityogranizer.api.v1.model.StudentDTO;
-import com.example.universityogranizer.api.v1.model.TeacherDTO;
-import com.example.universityogranizer.api.v1.model.TeacherListDTO;
+import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
+import com.example.universityogranizer.teacherservice.dto.TeacherListDTO;
 import com.example.universityogranizer.domain.Student;
 import com.example.universityogranizer.domain.Teacher;
-import com.example.universityogranizer.exeptions.StudentNotFoundException;
 import com.example.universityogranizer.exeptions.TeacherNotFoundException;
 import com.example.universityogranizer.repositories.StudentRepository;
-import com.example.universityogranizer.repositories.TeacherRepository;
+import com.example.universityogranizer.teacherservice.repository.TeacherRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 @Component
-public class TeacherService {
+class TeacherDao {
 
     private TeacherRepository teacherRepository;
-    private StudentRepository studentRepository;
-
     private TeacherMapperImpl teacherMapper;
 
-    public TeacherService(TeacherRepository teacherRepository, StudentRepository studentRepository, TeacherMapperImpl teacherMapper) {
+    public TeacherDao(TeacherRepository teacherRepository,TeacherMapperImpl teacherMapper) {
         this.teacherRepository = teacherRepository;
-        this.studentRepository = studentRepository;
         this.teacherMapper = teacherMapper;
     }
 
@@ -38,29 +33,15 @@ public class TeacherService {
         return teacherRepository.save(teacher);
     }
 
-    public Teacher updateTeacher(Teacher teacher){
-        return teacherRepository.save(teacher);
-    }
-
-    public Optional<Teacher> findTeacher(Teacher teacher){
-        return teacherRepository.findById(teacher.getId());
-    }
-
     public TeacherDTO findTeacherById(Long id){
         return teacherMapper.teacherToTeacherDTO(teacherRepository.findById(id).orElseThrow(TeacherNotFoundException::new));
     }
 
-    public Teacher addStudentToTeacher(Long idT, Long idS){
-        Student student = studentRepository.findById(idS).orElseThrow(StudentNotFoundException::new);
+    public Teacher addStudentToTeacher(Long idT, Student student){
         Teacher teacher = teacherRepository.findById(idT).orElseThrow(TeacherNotFoundException::new);
         teacher.getStudents().add(student);
         student.getTeachers().add(teacher);
-        studentRepository.save(student);
         return teacherRepository.save(teacher);
-    }
-
-    public void deleteTeacher(Teacher teacher){
-        teacherRepository.delete(teacher);
     }
 
     public void deleteTeacherById(Long id){
@@ -104,13 +85,11 @@ public class TeacherService {
 
     }
 
-    public void deleteTeacherFromStudent(Long idT, Long idS) {
-        Student student = studentRepository.findById(idS).orElseThrow(StudentNotFoundException::new);
+    public void deleteTeacherFromStudent(Long idT, Student student) {
         Teacher teacher = teacherRepository.findById(idT).orElseThrow(TeacherNotFoundException::new);
         teacher.getStudents().remove(student);
         student.getTeachers().remove(teacher);
         teacherRepository.save(teacher);
-        studentRepository.save(student);
     }
 
     public List<StudentDTO> getStudents(Long id) {
@@ -120,7 +99,5 @@ public class TeacherService {
 
     public TeacherListDTO getTeachers(String firstname, String lastname) {
         return new TeacherListDTO(teacherRepository.findAllByPersonNameAndSurname(firstname, lastname).stream().map(teacherMapper::teacherToTeacherDTO).collect(Collectors.toList()));
-
-
     }
 }

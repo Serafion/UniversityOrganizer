@@ -1,4 +1,4 @@
-package com.example.universityogranizer.api.v1.model;
+package com.example.universityogranizer.teacherservice.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

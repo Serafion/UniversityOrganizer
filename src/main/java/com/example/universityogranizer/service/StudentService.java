@@ -1,15 +1,12 @@
 package com.example.universityogranizer.service;
 
 import com.example.universityogranizer.api.v1.mapper.StudentMapper;
-import com.example.universityogranizer.api.v1.mapper.TeacherMapperImpl;
 import com.example.universityogranizer.api.v1.model.StudentDTO;
-import com.example.universityogranizer.api.v1.model.TeacherDTO;
 import com.example.universityogranizer.domain.Student;
-import com.example.universityogranizer.domain.Teacher;
 import com.example.universityogranizer.exeptions.StudentNotFoundException;
-import com.example.universityogranizer.exeptions.TeacherNotFoundException;
 import com.example.universityogranizer.repositories.StudentRepository;
-import com.example.universityogranizer.repositories.TeacherRepository;
+import com.example.universityogranizer.teacherservice.TeacherMapperImpl;
+import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,13 +19,12 @@ import java.util.stream.Collectors;
 @Component
 public class StudentService {
 
-    private TeacherRepository teacherRepository;
     private StudentRepository studentRepository;
 
     private StudentMapper studentMapper;
 
-    public StudentService(TeacherRepository teacherRepository, StudentRepository studentRepository, StudentMapper studentMapper) {
-        this.teacherRepository = teacherRepository;
+    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper) {
+
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
     }
@@ -49,12 +45,12 @@ public class StudentService {
         return studentMapper.studentToStudentDTO(studentRepository.findById(id).orElseThrow(StudentNotFoundException::new));
     }
 
+
+    //To Be fixed
     public Student addTeacherToStudent(Long idT, Long idS) {
         Student student = studentRepository.findById(idS).orElseThrow(StudentNotFoundException::new);
-        Teacher teacher = teacherRepository.findById(idT).orElseThrow(TeacherNotFoundException::new);
-        teacher.getStudents().add(student);
-        student.getTeachers().add(teacher);
-        teacherRepository.save(teacher);
+//        student.getTeachers().add(teacher);
+
         return studentRepository.save(student);
     }
 
@@ -101,12 +97,11 @@ public class StudentService {
         return studentRepository.findAll(sort).stream().map(studentMapper::studentToStudentDTO).collect(Collectors.toList());
     }
 
+
+    //To be fixed
     public void deleteTeacherFromStudent(Long idT, Long idS) {
         Student student = studentRepository.findById(idS).orElseThrow(StudentNotFoundException::new);
-        Teacher teacher = teacherRepository.findById(idT).orElseThrow(TeacherNotFoundException::new);
-        teacher.getStudents().remove(student);
-        student.getTeachers().remove(teacher);
-        teacherRepository.save(teacher);
+//        student.getTeachers().remove(teacher);
         studentRepository.save(student);
 
 
