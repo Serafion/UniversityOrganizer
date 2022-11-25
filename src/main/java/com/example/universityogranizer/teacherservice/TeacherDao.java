@@ -2,12 +2,11 @@ package com.example.universityogranizer.teacherservice;
 
 import com.example.universityogranizer.api.v1.mapper.StudentMapperImpl;
 import com.example.universityogranizer.api.v1.model.StudentDTO;
-import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
-import com.example.universityogranizer.teacherservice.dto.TeacherListDTO;
 import com.example.universityogranizer.domain.Student;
 import com.example.universityogranizer.domain.Teacher;
 import com.example.universityogranizer.exeptions.TeacherNotFoundException;
-import com.example.universityogranizer.repositories.StudentRepository;
+import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
+import com.example.universityogranizer.teacherservice.dto.TeacherListDTO;
 import com.example.universityogranizer.teacherservice.repository.TeacherRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,8 +63,7 @@ class TeacherDao {
     }
 
     private TeacherDTO saveAndReturnDTO(Teacher teacher) {
-        Teacher savedTeacher = teacherRepository.save(teacher);
-
+        Teacher savedTeacher = teacherRepository.saveAndFlush(teacher);
         return teacherMapper.teacherToTeacherDTO(savedTeacher);
     }
 

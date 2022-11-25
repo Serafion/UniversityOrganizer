@@ -1,5 +1,6 @@
 package com.example.universityogranizer.service;
 
+import com.example.universityogranizer.api.v1.model.StudentDTO;
 import com.example.universityogranizer.domain.Student;
 import com.example.universityogranizer.domain.Teacher;
 import com.example.universityogranizer.exeptions.TeacherNotFoundException;
@@ -17,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -147,8 +149,6 @@ class TeacherDaoTest {
         Teacher teacher1 = teacherServiceFacade.saveNewTeacher(teacher);
         Student student = new Student();
 
-
-
         //When
         Teacher teacher2 = teacherServiceFacade.addStudentToTeacher(teacher1.getId(),student);
 
@@ -196,11 +196,53 @@ class TeacherDaoTest {
 
     @Test
     void createNewTeacher() {
+        //Given
+        TeacherServiceFacade teacherServiceFacade = new TeacherServiceConfiguration().teacherServiceFacadeTest(teacherRepository);
+        TeacherDTO teacherDTO = new TeacherDTO();
+        teacherDTO.setAge(22);
+        teacherDTO.setFirstname("Bobby");
+        teacherDTO.setSubject("math");
+        teacherDTO.setEmail("kelly@kelly.com");
+        teacherDTO.setStudents(new HashSet<>());
+
+        //When
+        TeacherDTO teacher1 = teacherServiceFacade.createNewTeacher(teacherDTO);
+
+        //Then
+        assertThat(teacher1.getSubject()).isEqualTo(teacherDTO.getSubject());
+        assertThat(teacher1.getAge()).isEqualTo(teacherDTO.getAge());
+        assertThat(teacher1.getEmail()).isEqualTo(teacherDTO.getEmail());
 
     }
 
     @Test
     void saveTeacherByDTO() {
+        //Given
+        TeacherServiceFacade teacherServiceFacade = new TeacherServiceConfiguration().teacherServiceFacadeTest(teacherRepository);
+        Teacher teacher = new Teacher();
+        teacher.setAge(88);
+        teacher.setPersonName("BobbyX");
+        teacher.setSubject("math");
+        teacher.setEmail("kelly@kelly.com");
+        teacher.setStudents(new HashSet<>());
+        Teacher teacher1 = teacherRepository.save(teacher);
+        Long id = teacher1.getId();
+        TeacherDTO teacherDTO = new TeacherDTO();
+        teacherDTO.setAge(22);
+        teacherDTO.setFirstname("BobbyB");
+        teacherDTO.setSubject("mathX");
+        teacherDTO.setEmail("kelly@kelly.com");
+        teacherDTO.setStudents(new HashSet<>());
+
+        //When
+        TeacherDTO teacherSaved = teacherServiceFacade.saveTeacherByDTO(id,teacherDTO);
+        TeacherDTO teacherFound = teacherServiceFacade.findTeacherById(id);
+
+        //Then
+        assertThat(teacherSaved.getSubject()).isEqualTo(teacherFound.getSubject());
+        assertThat(teacherSaved.getAge()).isEqualTo(teacherFound.getAge());
+        assertThat(teacherSaved.getEmail()).isEqualTo(teacherFound.getEmail());
+        assertThat(teacherSaved.getFirstname()).isEqualTo(teacherFound.getFirstname());
     }
 
     @Test
@@ -213,10 +255,46 @@ class TeacherDaoTest {
 
     @Test
     void deleteTeacherFromStudent() {
+        //Given
+        TeacherServiceFacade teacherServiceFacade = new TeacherServiceConfiguration().teacherServiceFacadeTest(teacherRepository);
+        Teacher teacher = new Teacher(("math"),new HashSet<>());
+        teacher.setAge(22);
+        teacher.setEmail("makak@makak.pl");
+        teacher.setSurname("Alabama");
+        teacher.setPersonName("Adam");
+        Student student = new Student();
+        Set<Student> students = new HashSet<>();
+        students.add(student);
+        teacher.setStudents(students);
+        Teacher teacher1 = teacherRepository.save(teacher);
+
+        //When
+        teacherServiceFacade.deleteTeacherFromStudent(teacher1.getId(),student);
+
+        //Then
+        assertThat(teacherServiceFacade.findTeacherById(teacher1.getId()).getStudents().size()).isEqualTo(0);
     }
 
     @Test
     void getStudents() {
+        //Given
+        TeacherServiceFacade teacherServiceFacade = new TeacherServiceConfiguration().teacherServiceFacadeTest(teacherRepository);
+        Teacher teacher = new Teacher(("math"),new HashSet<>());
+        teacher.setAge(22);
+        teacher.setEmail("makak@makak.pl");
+        teacher.setSurname("Alabama");
+        teacher.setPersonName("Adam");
+        Student student = new Student();
+        Set<Student> students = new HashSet<>();
+        students.add(student);
+        teacher.setStudents(students);
+        Teacher teacher1 = teacherRepository.save(teacher);
+
+        //When
+        List<StudentDTO> studentDTOList = teacherServiceFacade.getStudents(teacher1.getId());
+
+        //Then
+        assertThat(studentDTOList.size()).isEqualTo(1);
     }
 
     @Test
