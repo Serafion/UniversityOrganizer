@@ -1,7 +1,7 @@
 package com.example.universityogranizer.teacherservice;
 
-import com.example.universityogranizer.studentclient.StudentMapperImpl;
-import com.example.universityogranizer.studentclient.dto.StudentDTO;
+import com.example.universityogranizer.studentservice.StudentMapperImpl;
+import com.example.universityogranizer.studentservice.dto.StudentDTO;
 import com.example.universityogranizer.domain.Student;
 import com.example.universityogranizer.domain.Teacher;
 import com.example.universityogranizer.teacherservice.exceptions.TeacherNotFoundException;
@@ -49,9 +49,7 @@ class TeacherDao {
         return teacherRepository
                 .findAll()
                 .stream()
-                .map(student -> {
-                    return teacherMapper.teacherToTeacherDTO(student);
-                })
+                .map(teacherMapper::teacherToTeacherDTO)
                 .collect(Collectors.toList());
     }
 
@@ -83,7 +81,6 @@ class TeacherDao {
     public void deleteTeacherFromStudent(Long idT, Student student) {
         Teacher teacher = teacherRepository.findById(idT).orElseThrow(TeacherNotFoundException::new);
         teacher.getStudents().remove(student);
-        student.getTeachers().remove(teacher);
         teacherRepository.save(teacher);
     }
 
@@ -94,5 +91,9 @@ class TeacherDao {
 
     public List<TeacherDTO> getTeachers(String firstname, String lastname) {
         return teacherRepository.findAllByPersonNameAndSurname(firstname, lastname).stream().map(teacherMapper::teacherToTeacherDTO).collect(Collectors.toList());
+    }
+
+    public Teacher getTeacherById(Long idT) {
+        return teacherRepository.findById(idT).orElseThrow(TeacherNotFoundException::new);
     }
 }

@@ -1,7 +1,7 @@
 package com.example.universityogranizer.teacherservice;
 
-import com.example.universityogranizer.studentclient.StudentMapperImpl;
-import com.example.universityogranizer.studentclient.dto.StudentDTO;
+import com.example.universityogranizer.studentservice.StudentMapperImpl;
+import com.example.universityogranizer.studentservice.dto.StudentDTO;
 import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
 import com.example.universityogranizer.domain.Student;
 import com.example.universityogranizer.domain.Teacher;

@@ -2,7 +2,7 @@ package com.example.universityogranizer.service;
 
 import com.example.universityogranizer.domain.Student;
 import com.example.universityogranizer.domain.Teacher;
-import com.example.universityogranizer.studentclient.dto.StudentDTO;
+import com.example.universityogranizer.studentservice.dto.StudentDTO;
 import com.example.universityogranizer.teacherservice.TeacherServiceConfiguration;
 import com.example.universityogranizer.teacherservice.TeacherServiceFacade;
 import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
@@ -301,13 +301,9 @@ class TeacherServiceTest {
 
         //When
         List<TeacherDTO> teachers = teacherServiceFacade.findAllSorted(sort);
-        teachers.stream().map(t -> t.getFirstname()).peek(System.out::println).count();
 
         //Then
-
         assertThat(teachers.size()).isEqualTo(2);
-
-
     }
 
     @Test

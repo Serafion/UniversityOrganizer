@@ -1,9 +1,8 @@
-package com.example.universityogranizer.studentclient;
+package com.example.universityogranizer.studentservice;
 
-import com.example.universityogranizer.api.v1.mapper.StudentMapper;
-import com.example.universityogranizer.studentclient.dto.StudentDTO;
 import com.example.universityogranizer.domain.Student;
 import com.example.universityogranizer.domain.Teacher;
+import com.example.universityogranizer.studentservice.dto.StudentDTO;
 import com.example.universityogranizer.teacherservice.TeacherMapperImpl;
 import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
 import org.springframework.stereotype.Component;
@@ -12,9 +11,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class StudentMapperImpl implements StudentMapper {
+public class StudentMapperImpl {
 
-    @Override
+
     public StudentDTO studentToStudentDTO(Student student) {
         if ( student == null ) {
             return null;
@@ -30,7 +29,7 @@ public class StudentMapperImpl implements StudentMapper {
         return studentDTO;
     }
 
-    @Override
+
     public Student studentDTOtoStudent(StudentDTO studentDTO) {
         if ( studentDTO == null ) {
             return null;

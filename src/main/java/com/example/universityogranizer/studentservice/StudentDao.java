@@ -1,10 +1,10 @@
-package com.example.universityogranizer.studentclient;
+package com.example.universityogranizer.studentservice;
 
-import com.example.universityogranizer.api.v1.mapper.StudentMapper;
-import com.example.universityogranizer.studentclient.dto.StudentDTO;
 import com.example.universityogranizer.domain.Student;
-import com.example.universityogranizer.studentclient.exceptions.StudentNotFoundException;
-import com.example.universityogranizer.studentclient.repository.StudentRepository;
+import com.example.universityogranizer.domain.Teacher;
+import com.example.universityogranizer.studentservice.dto.StudentDTO;
+import com.example.universityogranizer.studentservice.exceptions.StudentNotFoundException;
+import com.example.universityogranizer.studentservice.repository.StudentRepository;
 import com.example.universityogranizer.teacherservice.TeacherMapperImpl;
 import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
 import org.springframework.data.domain.Page;
@@ -13,32 +13,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-public class StudentService {
+public class StudentDao {
 
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
+    private final StudentMapperImpl studentMapper;
 
-    private StudentMapper studentMapper;
-
-    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper) {
-
+    public StudentDao(StudentRepository studentRepository, StudentMapperImpl studentMapper) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
-    }
-
-    public Student saveNewTeacher(Student student) {
-        return studentRepository.save(student);
-    }
-
-    public Student updateTeacher(Student student) {
-        return studentRepository.save(student);
-    }
-
-    public Optional<Student> findTeacher(Student student) {
-        return studentRepository.findById(student.getId());
     }
 
     public StudentDTO findStudentById(Long id) {
@@ -46,11 +31,9 @@ public class StudentService {
     }
 
 
-    //To Be fixed
-    public Student addTeacherToStudent(Long idT, Long idS) {
+    public Student addTeacherToStudent(Long idS, Teacher teacher) {
         Student student = studentRepository.findById(idS).orElseThrow(StudentNotFoundException::new);
-//        student.getTeachers().add(teacher);
-
+        student.getTeachers().add(teacher);
         return studentRepository.save(student);
     }
 
@@ -64,10 +47,7 @@ public class StudentService {
         return studentRepository
                 .findAll()
                 .stream()
-                .map(student -> {
-                    StudentDTO studentDTO = studentMapper.studentToStudentDTO(student);
-                    return studentDTO;
-                })
+                .map(studentMapper::studentToStudentDTO)
                 .collect(Collectors.toList());
     }
 
@@ -78,7 +58,6 @@ public class StudentService {
 
     private StudentDTO saveAndReturnDTO(Student student) {
         Student savedStudent = studentRepository.save(student);
-
         return studentMapper.studentToStudentDTO(savedStudent);
     }
 
@@ -98,13 +77,10 @@ public class StudentService {
     }
 
 
-    //To be fixed
-    public void deleteTeacherFromStudent(Long idT, Long idS) {
+    public void deleteTeacherFromStudent(Long idS, Teacher teacher) {
         Student student = studentRepository.findById(idS).orElseThrow(StudentNotFoundException::new);
-//        student.getTeachers().remove(teacher);
+        student.getTeachers().remove(teacher);
         studentRepository.save(student);
-
-
     }
 
     public List<TeacherDTO> getTeachers(Long id) {
@@ -113,7 +89,15 @@ public class StudentService {
 
     }
 
-    public StudentDTO getStudent(String firstname, String lastname) {
-        return studentMapper.studentToStudentDTO(studentRepository.findByPersonNameAndSurname(firstname, lastname));
+    public List<StudentDTO> getStudent(String firstname, String lastname) {
+        return studentRepository.findAllByPersonNameAndSurname(firstname, lastname).stream().map(studentMapper::studentToStudentDTO).collect(Collectors.toList());
     }
+
+    public Student findStudentDataById(Long idS) {
+        return studentRepository.findById(idS).orElseThrow(StudentNotFoundException::new);
+    }
+
+//    public Student saveNewStudent(Student student) {
+//        return studentRepository.save(student);
+//    }
 }
