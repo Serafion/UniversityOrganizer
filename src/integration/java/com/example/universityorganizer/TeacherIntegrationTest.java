@@ -62,8 +62,8 @@ public class TeacherIntegrationTest {
     }
 
     @Test
-    @DisplayName("Should save and return a list of one teacher")
-    void shouldReturnGeneratedCharacter() throws Exception {
+    @DisplayName("Should return an error message when teacher not in db")
+    void shouldReturn404StatusWhenTeacherNotInDB() throws Exception {
         //When
         MvcResult teachers = mockMvc.perform(MockMvcRequestBuilders.get("/teachers/10")).andReturn();
 
