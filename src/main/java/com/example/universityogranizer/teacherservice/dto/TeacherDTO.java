@@ -9,8 +9,6 @@ import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class TeacherDTO {
 
     @Size(min = 3)
@@ -23,6 +21,18 @@ public class TeacherDTO {
     private String email;
     private String subject;
     private Set<StudentDTO> students;
+
+    public TeacherDTO() {
+    }
+
+    public TeacherDTO(String firstname, String lastname, Integer age, String email, String subject, Set<StudentDTO> students) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.age = age;
+        this.email = email;
+        this.subject = subject;
+        this.students = students;
+    }
 
     public String getFirstname() {
         return firstname;

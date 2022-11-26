@@ -26,7 +26,7 @@ public class StudentController {
         this.teacherServiceFacade = teacherServiceFacade;
     }
 
-    @GetMapping
+    @GetMapping(headers = "Accept=application/json")
     @ResponseStatus(HttpStatus.OK)
     public List<StudentDTO> getListOfStudents(){
         return studentServiceFacade.getAllStudents();
@@ -39,34 +39,34 @@ public class StudentController {
     }
 
 
-    @PostMapping
+    @PostMapping(headers = "Accept=application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public StudentDTO createNewStudent(@RequestBody StudentDTO studentDTO){
         return studentServiceFacade.createNewStudent(studentDTO);
     }
 
-    @PutMapping({"/{id}"})
+    @PutMapping(value = {"/{id}"}, headers = "Accept=application/json")
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO updateCustomer(@PathVariable Long id, @RequestBody StudentDTO studentDTO){
         return studentServiceFacade.saveStudentByDTO(id,studentDTO);
     }
 
-    @DeleteMapping({"/{id}"})
+    @DeleteMapping(value = {"/{id}"})
     @ResponseStatus(HttpStatus.OK)
     public void deleteCustomer(@PathVariable Long id){
         studentServiceFacade.deleteStudentById(id);
     }
-    @GetMapping(path = "/page")
+    @GetMapping(path = "/page", headers = "Accept=application/json")
     public Page<StudentDTO> loadStudentsPage(Pageable pageable) {
         return studentServiceFacade.findAllPage(pageable);
     }
 
-    @GetMapping(path = "/sorted")
+    @GetMapping(path = "/sorted", headers = "Accept=application/json")
     public List<StudentDTO> loadStudentsSorted(Sort sort) {
         return studentServiceFacade.findAllSorted(sort);
     }
 
-    @PostMapping({"/{idS}/{idT}"})
+    @PostMapping(value = {"/{idS}/{idT}"}, headers = "Accept=application/json")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addTeacherToStudent(@PathVariable Long idS, @PathVariable Long idT){
         Student student = studentServiceFacade.findStudentDataById(idS);
