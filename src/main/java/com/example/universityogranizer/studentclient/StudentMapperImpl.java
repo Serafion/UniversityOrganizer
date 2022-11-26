@@ -1,6 +1,7 @@
-package com.example.universityogranizer.api.v1.mapper;
+package com.example.universityogranizer.studentclient;
 
-import com.example.universityogranizer.api.v1.model.StudentDTO;
+import com.example.universityogranizer.api.v1.mapper.StudentMapper;
+import com.example.universityogranizer.studentclient.dto.StudentDTO;
 import com.example.universityogranizer.domain.Student;
 import com.example.universityogranizer.domain.Teacher;
 import com.example.universityogranizer.teacherservice.TeacherMapperImpl;

@@ -1,10 +1,10 @@
-package com.example.universityogranizer.service;
+package com.example.universityogranizer.studentclient;
 
 import com.example.universityogranizer.api.v1.mapper.StudentMapper;
-import com.example.universityogranizer.api.v1.model.StudentDTO;
+import com.example.universityogranizer.studentclient.dto.StudentDTO;
 import com.example.universityogranizer.domain.Student;
-import com.example.universityogranizer.exeptions.StudentNotFoundException;
-import com.example.universityogranizer.repositories.StudentRepository;
+import com.example.universityogranizer.studentclient.exceptions.StudentNotFoundException;
+import com.example.universityogranizer.studentclient.repository.StudentRepository;
 import com.example.universityogranizer.teacherservice.TeacherMapperImpl;
 import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
 import org.springframework.data.domain.Page;

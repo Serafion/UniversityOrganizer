@@ -1,4 +1,4 @@
-package com.example.universityogranizer.api.v1.model;
+package com.example.universityogranizer.studentclient.dto;
 
 import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
 import lombok.*;

@@ -1,9 +1,8 @@
 package com.example.universityogranizer.controllers.v1;
 
-import com.example.universityogranizer.api.v1.model.StudentDTO;
+import com.example.universityogranizer.studentclient.dto.StudentDTO;
 import com.example.universityogranizer.teacherservice.TeacherServiceFacade;
 import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
-import com.example.universityogranizer.teacherservice.dto.TeacherListDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,8 +24,8 @@ public class TeacherController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public TeacherListDTO getListOfCustomers(){
-        return new TeacherListDTO(teacherServiceFacade.getAllTeachers());
+    public List<TeacherDTO> getListOfTeachers(){
+        return teacherServiceFacade.getAllTeachers();
     }
 
     @GetMapping({"/{id}"})
@@ -81,7 +80,7 @@ public class TeacherController {
     }
 
     @GetMapping(path = "/getTeacher/{firstname}and{lastname}")
-    public TeacherListDTO getTeachersOfNameAndLastname(@PathVariable String firstname, @PathVariable String lastname) {
+    public List<TeacherDTO> getTeachersOfNameAndLastname(@PathVariable String firstname, @PathVariable String lastname) {
         return teacherServiceFacade.getTeachers(firstname,lastname);
     }
 }

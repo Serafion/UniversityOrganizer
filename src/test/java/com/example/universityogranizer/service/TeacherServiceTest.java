@@ -1,12 +1,12 @@
 package com.example.universityogranizer.service;
 
-import com.example.universityogranizer.api.v1.model.StudentDTO;
 import com.example.universityogranizer.domain.Student;
 import com.example.universityogranizer.domain.Teacher;
-import com.example.universityogranizer.exeptions.TeacherNotFoundException;
+import com.example.universityogranizer.studentclient.dto.StudentDTO;
 import com.example.universityogranizer.teacherservice.TeacherServiceConfiguration;
 import com.example.universityogranizer.teacherservice.TeacherServiceFacade;
 import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
+import com.example.universityogranizer.teacherservice.exceptions.TeacherNotFoundException;
 import com.example.universityogranizer.teacherservice.repository.TeacherRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,19 +14,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.*;
 
 @ActiveProfiles("local")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class TeacherDaoTest {
+class TeacherServiceTest {
 
 
     @Autowired
@@ -247,10 +249,65 @@ class TeacherDaoTest {
 
     @Test
     void findAllPage() {
+        //Given
+        TeacherServiceFacade teacherServiceFacade = new TeacherServiceConfiguration().teacherServiceFacadeTest(teacherRepository);
+        Teacher teacher = new Teacher(("math"),new HashSet<>());
+        teacher.setAge(22);
+        teacher.setEmail("makaki@makak.pl");
+        teacher.setSurname("Alabama");
+        teacher.setPersonName("Adela");
+        Teacher teacher1 = new Teacher(("math"),new HashSet<>());
+        teacher1.setAge(22);
+        teacher1.setEmail("makak@makak.pl");
+        teacher1.setSurname("Alabama");
+        teacher.setPersonName("Adam");
+        Teacher teacher2 = new Teacher(("math"),new HashSet<>());
+        teacher2.setAge(22);
+        teacher2.setEmail("makak@makak.pl");
+        teacher2.setSurname("Alabama");
+        teacher.setPersonName("Adam");
+        teacherRepository.save(teacher);
+        teacherRepository.save(teacher1);
+        teacherRepository.save(teacher2);
+        Pageable pageable = Pageable.ofSize(10);
+
+        //When
+        Page<TeacherDTO> teachers = teacherServiceFacade.findAllPage(pageable);
+
+
+        //Then
+        assertThat(teachers.getTotalPages()).isEqualTo(1);
+        assertThat(teachers.getTotalElements()).isEqualTo(3);
+
     }
 
     @Test
     void findAllSorted() {
+        //Given
+        TeacherServiceFacade teacherServiceFacade = new TeacherServiceConfiguration().teacherServiceFacadeTest(teacherRepository);
+        Teacher teacher = new Teacher(("math"),new HashSet<>());
+        teacher.setAge(22);
+        teacher.setEmail("makaki@makak.pl");
+        teacher.setSurname("Alabama");
+        teacher.setPersonName("Adela");
+        Teacher teacher1 = new Teacher(("math"),new HashSet<>());
+        teacher1.setAge(22);
+        teacher1.setEmail("makak@makak.pl");
+        teacher1.setSurname("Alabama");
+        teacher.setPersonName("Adam");
+        teacherRepository.save(teacher);
+        teacherRepository.save(teacher1);
+        Sort sort = Sort.by(Sort.Order.asc("PersonName"));
+
+        //When
+        List<TeacherDTO> teachers = teacherServiceFacade.findAllSorted(sort);
+        teachers.stream().map(t -> t.getFirstname()).peek(System.out::println).count();
+
+        //Then
+
+        assertThat(teachers.size()).isEqualTo(2);
+
+
     }
 
     @Test
@@ -276,6 +333,16 @@ class TeacherDaoTest {
     }
 
     @Test
+    void deleteTeacherFromStudentExceptionTest() {
+        //Given
+        TeacherServiceFacade teacherServiceFacade = new TeacherServiceConfiguration().teacherServiceFacadeTest(teacherRepository);
+        Student student = new Student();
+
+        //When &&Then
+        assertThatThrownBy(() -> teacherServiceFacade.deleteTeacherFromStudent(7L,student)).isInstanceOf(TeacherNotFoundException.class);
+    }
+
+    @Test
     void getStudents() {
         //Given
         TeacherServiceFacade teacherServiceFacade = new TeacherServiceConfiguration().teacherServiceFacadeTest(teacherRepository);
@@ -298,7 +365,44 @@ class TeacherDaoTest {
     }
 
     @Test
+    void getStudentsExceptionTest() {
+        //Given
+        TeacherServiceFacade teacherServiceFacade = new TeacherServiceConfiguration().teacherServiceFacadeTest(teacherRepository);
+
+        //When && Then
+        assertThatThrownBy(() -> teacherServiceFacade.getStudents(7L)).isInstanceOf(TeacherNotFoundException.class);
+
+    }
+
+    @Test
     void getTeachers() {
+        //Given
+        TeacherServiceFacade teacherServiceFacade = new TeacherServiceConfiguration().teacherServiceFacadeTest(teacherRepository);
+        Teacher teacher = new Teacher(("math"),new HashSet<>());
+        teacher.setAge(22);
+        teacher.setEmail("makaki@makak.pl");
+        teacher.setSurname("Alabama");
+        teacher.setPersonName("Adela");
+        Teacher teacher1 = new Teacher(("math"),new HashSet<>());
+        teacher1.setAge(22);
+        teacher1.setEmail("makak@makak.pl");
+        teacher1.setSurname("Alabama");
+        teacher.setPersonName("Adam");
+        Teacher teacher2 = new Teacher(("math"),new HashSet<>());
+        teacher2.setAge(22);
+        teacher2.setEmail("makak@makak.pl");
+        teacher2.setSurname("Alabama");
+        teacher.setPersonName("Adam");
+        teacherRepository.save(teacher);
+        teacherRepository.save(teacher1);
+        teacherRepository.save(teacher2);
+
+        //When
+        List<TeacherDTO> teachers = teacherServiceFacade.getTeachers("Adam","Alabama");
+
+
+        //Then
+        assertThat(teachers.size()).isEqualTo(1);
     }
 //    @Test
 //    @DisplayName("Should not find a non existent teacher by id")

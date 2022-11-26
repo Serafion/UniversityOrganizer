@@ -1,12 +1,11 @@
 package com.example.universityogranizer.teacherservice;
 
-import com.example.universityogranizer.api.v1.mapper.StudentMapperImpl;
-import com.example.universityogranizer.api.v1.model.StudentDTO;
+import com.example.universityogranizer.studentclient.StudentMapperImpl;
+import com.example.universityogranizer.studentclient.dto.StudentDTO;
 import com.example.universityogranizer.domain.Student;
 import com.example.universityogranizer.domain.Teacher;
-import com.example.universityogranizer.exeptions.TeacherNotFoundException;
+import com.example.universityogranizer.teacherservice.exceptions.TeacherNotFoundException;
 import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
-import com.example.universityogranizer.teacherservice.dto.TeacherListDTO;
 import com.example.universityogranizer.teacherservice.repository.TeacherRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +19,8 @@ import java.util.stream.Collectors;
 @Component
 class TeacherDao {
 
-    private TeacherRepository teacherRepository;
-    private TeacherMapperImpl teacherMapper;
+    private final TeacherRepository teacherRepository;
+    private final TeacherMapperImpl teacherMapper;
 
     public TeacherDao(TeacherRepository teacherRepository,TeacherMapperImpl teacherMapper) {
         this.teacherRepository = teacherRepository;
@@ -51,8 +50,7 @@ class TeacherDao {
                 .findAll()
                 .stream()
                 .map(student -> {
-                    TeacherDTO teacherDTO = teacherMapper.teacherToTeacherDTO(student);
-                    return teacherDTO;
+                    return teacherMapper.teacherToTeacherDTO(student);
                 })
                 .collect(Collectors.toList());
     }
@@ -80,7 +78,6 @@ class TeacherDao {
 
     public List<TeacherDTO> findAllSorted(Sort sort) {
         return teacherRepository.findAll(sort).stream().map(teacherMapper::teacherToTeacherDTO).collect(Collectors.toList());
-
     }
 
     public void deleteTeacherFromStudent(Long idT, Student student) {
@@ -95,7 +92,7 @@ class TeacherDao {
         return teacher.getStudents().stream().map(new StudentMapperImpl()::studentToStudentDTO).collect(Collectors.toList());
     }
 
-    public TeacherListDTO getTeachers(String firstname, String lastname) {
-        return new TeacherListDTO(teacherRepository.findAllByPersonNameAndSurname(firstname, lastname).stream().map(teacherMapper::teacherToTeacherDTO).collect(Collectors.toList()));
+    public List<TeacherDTO> getTeachers(String firstname, String lastname) {
+        return teacherRepository.findAllByPersonNameAndSurname(firstname, lastname).stream().map(teacherMapper::teacherToTeacherDTO).collect(Collectors.toList());
     }
 }

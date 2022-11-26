@@ -1,9 +1,9 @@
 package com.example.universityogranizer.controllers.v1;
 
-import com.example.universityogranizer.api.v1.model.StudentDTO;
-import com.example.universityogranizer.api.v1.model.StudentListDTO;
+import com.example.universityogranizer.studentclient.dto.StudentDTO;
+import com.example.universityogranizer.studentclient.dto.StudentListDTO;
 import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
-import com.example.universityogranizer.service.StudentService;
+import com.example.universityogranizer.studentclient.StudentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

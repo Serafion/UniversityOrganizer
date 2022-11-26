@@ -1,10 +1,9 @@
 package com.example.universityogranizer.teacherservice;
 
-import com.example.universityogranizer.api.v1.model.StudentDTO;
-import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
-import com.example.universityogranizer.teacherservice.dto.TeacherListDTO;
 import com.example.universityogranizer.domain.Student;
 import com.example.universityogranizer.domain.Teacher;
+import com.example.universityogranizer.studentclient.dto.StudentDTO;
+import com.example.universityogranizer.teacherservice.dto.TeacherDTO;
 import com.example.universityogranizer.teacherservice.repository.TeacherRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +32,7 @@ public class TeacherServiceFacade {
     }
 
     public Teacher addStudentToTeacher(Long idT, Student student) {
-        return teacherDao.addStudentToTeacher(idT,student);
+        return teacherDao.addStudentToTeacher(idT, student);
     }
 
     public void deleteTeacherById(Long id) {
@@ -70,7 +69,7 @@ public class TeacherServiceFacade {
         return teacherDao.getStudents(id);
     }
 
-    public TeacherListDTO getTeachers(String firstname, String lastname) {
+    public List<TeacherDTO> getTeachers(String firstname, String lastname) {
         return teacherDao.getTeachers(firstname, lastname);
     }
 }

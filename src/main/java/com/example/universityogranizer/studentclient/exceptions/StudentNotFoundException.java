@@ -1,4 +1,4 @@
-package com.example.universityogranizer.exeptions;
+package com.example.universityogranizer.studentclient.exceptions;
 
 public class StudentNotFoundException extends RuntimeException{
 
