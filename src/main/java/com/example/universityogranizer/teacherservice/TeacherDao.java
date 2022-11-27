@@ -90,7 +90,11 @@ class TeacherDao {
     }
 
     public List<TeacherDTO> getTeachers(String firstname, String lastname) {
-        return teacherRepository.findAllByPersonNameAndSurname(firstname, lastname).stream().map(teacherMapper::teacherToTeacherDTO).collect(Collectors.toList());
+        List<TeacherDTO> teacherDTOList =teacherRepository.findAllByPersonNameAndSurname(firstname, lastname).stream().map(teacherMapper::teacherToTeacherDTO).collect(Collectors.toList());
+        if(teacherDTOList.isEmpty()){
+            throw new TeacherNotFoundException();
+        }
+        return teacherDTOList;
     }
 
     public Teacher getTeacherById(Long idT) {

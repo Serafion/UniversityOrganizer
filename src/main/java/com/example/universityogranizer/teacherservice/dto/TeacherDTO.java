@@ -1,6 +1,8 @@
 package com.example.universityogranizer.teacherservice.dto;
 
 import com.example.universityogranizer.studentservice.dto.StudentDTO;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.validation.constraints.Email;
@@ -11,20 +13,27 @@ import java.util.Set;
 @Data
 public class TeacherDTO {
 
+    @JsonProperty("firstname")
     @Size(min = 3)
     private String firstname;
+    @JsonProperty("lastname")
     @Size(min = 3)
     private String lastname;
+    @JsonProperty("age")
     @Min(18)
     private Integer age;
+    @JsonProperty("email")
     @Email
     private String email;
+    @JsonProperty("subject")
     private String subject;
+    @JsonProperty("students")
     private Set<StudentDTO> students;
 
     public TeacherDTO() {
     }
 
+    @JsonCreator
     public TeacherDTO(String firstname, String lastname, Integer age, String email, String subject, Set<StudentDTO> students) {
         this.firstname = firstname;
         this.lastname = lastname;
